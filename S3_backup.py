@@ -203,7 +203,7 @@ exclusions = load_exclusions()
 # Get list of files on S3 bucket before upload
 files_on_s3 = s3_list_files()
 # Send directory to function that reads directory tree and copy file to S3
-backup_directory_file = open('backup_dir.txt', 'r')
+backup_directory_file = open('..\\backup_dir.txt', 'r')
 files_on_disk = s3_upload_directory_tree(backup_directory_file.readline(), exclusions, files_on_s3)
 backup_directory_file.close()
 # Get list of files on S3 bucket after upload
