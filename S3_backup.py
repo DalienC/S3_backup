@@ -90,23 +90,23 @@ def s3_upload_directory_tree(directory, excl, s3_files):
                         else:
                             print('File not modified on S3.\n')
             log_file.write(datetime.datetime.now().strftime(
-                '%Y/%m/%d %H:%M:%S') + ' - INFO - All files copied to S3 successfully.')
+                '%Y/%m/%d %H:%M:%S') + ' - INFO - All files copied to S3 successfully.\n')
         except Exception as err:
             print('Failure while walking through directory tree: \"%s\"' % directory)
             log_file.write(datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + ' - ERROR - failure while walking \
 through directory tree and copying files to S3. Check error_log.txt log file. Error message: %s\n')
             error_log = open('..\\error_log.txt', 'w')
-            error_log.write('Working directory:')
+            error_log.write('Working directory:\n')
             error_log.write('\t%s' % directory)
-            error_log.write('\nLast touched file name:')
+            error_log.write('\nLast touched file name:\n')
             error_log.write('\t%s' % file)
-            error_log.write('\nResponse from S3:')
+            error_log.write('\nResponse from S3:\n')
             error_log.write('\t%s' % pprint.pformat(response))
             sys.exit(err)
     else:
         print('Directory \"%s\" does not exist' % directory)
         log_file.write(datetime.datetime.now().strftime(
-            '%Y/%m/%d %H:%M:%S') + ' - INFO - Specified local directory \"%s \"not found.' % directory)
+            '%Y/%m/%d %H:%M:%S') + ' - INFO - Specified local directory \"%s \"not found.\n' % directory)
         sys.exit()
     print('Total files processed: %s' % count_processed_files)
     print('Total files copied: %s' % count_copied_files)
@@ -118,7 +118,7 @@ def s3_delete_files(local_files, on_s3_files):
     files_on_local_disk_but_not_on_s3 = [item for item in local_files if item not in on_s3_files]
     if files_on_s3_but_not_on_local_disk:
         log_file.write(datetime.datetime.now().strftime(
-            '%Y/%m/%d %H:%M:%S') + ' - INFO - found files on S3 that are no longer present on disk.')
+            '%Y/%m/%d %H:%M:%S') + ' - INFO - found files on S3 that are no longer present on disk.\n')
         delete_from_s3 = None
         while delete_from_s3 not in ['Yes', 'yes', 'No', 'no', 'y', 'n', '']:
             delete_from_s3 = input(
@@ -132,7 +132,7 @@ from S3? (Yes / No): ' % pprint.pformat(files_on_s3_but_not_on_local_disk))
                 s3.delete_objects(Bucket='backup-to-cloud', Delete={'Objects':delete_dic})
                 print('All deleted from S3.')
                 log_file.write(datetime.datetime.now().strftime(
-                    '%Y/%m/%d %H:%M:%S') + ' - INFO - All files successfully deleted from S3 bucket.')
+                    '%Y/%m/%d %H:%M:%S') + ' - INFO - All files successfully deleted from S3 bucket.\n')
             except Exception as err:
                 print('Failure while deleting files from S3 bucket.')
                 log_file.write(datetime.datetime.now().strftime(
@@ -156,14 +156,14 @@ def s3_list_files():
                 object_list += [item for item in page['Contents']]
             except:
                 print('S3 bucket empty.')
-                log_file.write(datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + ' - INFO - S3 bucket empty.')
+                log_file.write(datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + ' - INFO - S3 bucket empty.\n')
             # convert list to dictionary where dictionary keys = s3 file keys. This makes easier to compare objects later
         object_dictionary = {}
         for item in object_list:
             object_dictionary.update({item['Key']:item})
             # print(pprint.pformat(object_dictionary))
         log_file.write(datetime.datetime.now().strftime(
-            '%Y/%m/%d %H:%M:%S') + ' - INFO - S3 bucket file list retrieved successfully.')
+            '%Y/%m/%d %H:%M:%S') + ' - INFO - S3 bucket file list retrieved successfully.\n')
         return object_dictionary
     except Exception as err:
         print('Failure while retrieving files list from S3 bucket.')
@@ -181,7 +181,7 @@ def load_exclusions():
         exclusions_file.close()
         exclude_dic['dirs'] = [item.lower() for item in exclude_dic['dirs']]
         log_file.write(datetime.datetime.now().strftime(
-                '%Y/%m/%d %H:%M:%S') + ' - INFO - Exclusions loaded successfully from file \'exclusions.txt\'.')
+                '%Y/%m/%d %H:%M:%S') + ' - INFO - Exclusions loaded successfully from file \'exclusions.txt\'.\n')
         return exclude_dic
     except Exception as err:
         print('Failed to load exclusions from file \'exclusions.txt\'')
@@ -212,5 +212,5 @@ files_on_s3 = s3_list_files()
 s3_delete_files(files_on_disk, list(files_on_s3.keys()))
 print('\nAll tasks completed successfully! :):):)')
 os.system('pause')
-log_file.write(datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + ' - INFO - All tasks completed successfully!')
+log_file.write(datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + ' - INFO - All tasks completed successfully!\n')
 log_file.close()
