@@ -9,8 +9,8 @@ import pprint
 import datetime
 
 
-open('.\\debug.log','w').close()
-logging.basicConfig(level=logging.DEBUG, filename='debug.log', format='%(asctime)s - %(levelname)s - %(message)s')
+open('..\\debug.log','w').close()
+logging.basicConfig(level=logging.DEBUG, filename='..\\debug.log', format='%(asctime)s - %(levelname)s - %(message)s')
 # logging.disable(logging.DEBUG)
 
 """ 
@@ -95,7 +95,7 @@ def s3_upload_directory_tree(directory, excl, s3_files):
             print('Failure while walking through directory tree: \"%s\"' % directory)
             log_file.write(datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + ' - ERROR - failure while walking \
 through directory tree and copying files to S3. Check error_log.txt log file. Error message: %s\n')
-            error_log = open('.\\error_log.txt', 'w')
+            error_log = open('..\\error_log.txt', 'w')
             error_log.write('Working directory:')
             error_log.write('\t%s' % directory)
             error_log.write('\nLast touched file name:')
@@ -176,7 +176,7 @@ def s3_list_files():
 # Load and read exclusions file in JSON format, where exclusion dirs, files and file_extentions specified
 def load_exclusions():
     try:
-        exclusions_file = open('exclusions.txt', 'r')
+        exclusions_file = open('..\\exclusions.txt', 'r')
         exclude_dic = json.loads(exclusions_file.read())
         exclusions_file.close()
         exclude_dic['dirs'] = [item.lower() for item in exclude_dic['dirs']]
@@ -203,7 +203,9 @@ exclusions = load_exclusions()
 # Get list of files on S3 bucket before upload
 files_on_s3 = s3_list_files()
 # Send directory to function that reads directory tree and copy file to S3
-files_on_disk = s3_upload_directory_tree(os.path.join('C:\\', 'Users', 'daliu', 'Documents'), exclusions, files_on_s3)
+backup_directory_file = open('backup_dir.txt', 'r')
+files_on_disk = s3_upload_directory_tree(backup_directory_file.readline(), exclusions, files_on_s3)
+backup_directory_file.close()
 # Get list of files on S3 bucket after upload
 files_on_s3 = s3_list_files()
 # Send local and s3 file lists to s3 delete function and provide means to delete files on s3
