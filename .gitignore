@@ -99,3 +99,17 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# DownloadTorrents log files
+error_log.txt
+html_out.txt
+log_file.txt
+debug.log
+exclusions.txt
+
+# JetBrains folder
+.idea
+
+# Jenkins workspace
+JenkinsWorkspace/
+JenkinsWorkspace@tmp/
