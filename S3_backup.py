@@ -10,8 +10,13 @@ import datetime
 
 
 open('..\\debug.log','w').close()
-logging.basicConfig(level=logging.DEBUG, filename='..\\debug.log', format='%(asctime)s - %(levelname)s - %(message)s')
-#logging.disable(logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG, filename='..\\debug.log', format='%(asctime)s - %(levelname)s - %(message)s')
+# logging.disable(logging.DEBUG)
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler('..\\debug.log', 'w', 'utf-8')
+handler.setFormatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+root_logger.addHandler(handler)
 
 """ 
 DONE: login to S3. This is done via %userprofile%\.aws\credentials and config files. 
